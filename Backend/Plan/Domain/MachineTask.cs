@@ -24,8 +24,12 @@ public class MachineTask
     {
         var segment = _segments.Find(it => it.SegmentId == segmentId) ?? throw new ArgumentException("任务不存在，无法切分");
 
-        var newSegment = segment.Split(remainQuantity, curPlanEndTime, nextPlanStartTime);
-        
+        var beforeEndTime = segment.PlanEndTime;
+        var newSegment = segment.SplitIntoTwoSeg(remainQuantity, curPlanEndTime, nextPlanStartTime);
+
+        var postponeSeconds = (long) (newSegment.PlanEndTime - beforeEndTime).TotalSeconds;
+
+
     }
 
     public int EarlierThan(MachineTask other)
@@ -44,36 +48,48 @@ public class TaskSegment
     public readonly long MachineTaskId;
 
     public readonly long SegmentId;
-    
+
     public readonly int PlannedQuantity;
 
-    private int _index;
+    public int Index { get; private set; }
+
+    private DateTime _planStartTime;
+
+    private DateTime _planEndTime;
     
     private long _seconds;
+
+    private Status _status = Status.INIT;
     
     #endregion
 
     #region Methods
 
-    public int Index => _index;
+    public int StatusCode => (int)_status;
 
-    public TaskSegment(long machineTaskId, long segmentId, int plannedQuantity, int index)
-    {
-        MachineTaskId = machineTaskId;
-        SegmentId = segmentId;
-        PlannedQuantity = plannedQuantity;
-        _index = index;
-    }
+    public DateTime PlanEndTime => _planEndTime;
 
-    public TaskSegment Split(int remainQuantity, DateTime curPlanEndTime, DateTime nextPlanStartTime)
+    public TaskSegment SplitIntoTwoSeg(int remainQuantity, DateTime curPlanEndTime, DateTime nextPlanStartTime)
     {
         ModifySelf(remainQuantity, curPlanEndTime);
         return CreateNewSegment(remainQuantity, nextPlanStartTime); 
     }
 
-    public void Backward()
+    public void ReAssign(long postponeSeconds)
     {
-        _index++;
+        Postpone(postponeSeconds);
+        Backward();
+    }
+
+    private void Postpone(long postponeSeconds)
+    {
+        _planStartTime = _planStartTime.AddSeconds(postponeSeconds);
+        _planEndTime = _planEndTime.AddSeconds(postponeSeconds);
+    }
+
+    private void Backward()
+    {
+        Index += 1;
     }
 
     private void ModifySelf(int remainQuantity, DateTime curPlanEndTime)
@@ -87,5 +103,16 @@ public class TaskSegment
     }
 
     #endregion
-    
+
+    #region InnerClass
+
+    private enum Status
+    {
+        INIT = 0,
+        EXECUTING = 1,
+        INTERRUPTED = 2,
+        FINISHED = 100
+    } 
+
+    #endregion
 }
