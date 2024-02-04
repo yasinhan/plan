@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Backend\Application\" />
       <Folder Include="Backend\Execute\" />
-      <Folder Include="Backend\Plan\Interface\Model\request\" />
     </ItemGroup>
 
 </Project>
