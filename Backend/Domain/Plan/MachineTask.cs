@@ -16,6 +16,8 @@ public class MachineTask
 
     private List<TaskSegment> _segments;
 
+    public List<TaskSegment> Segments => _segments;
+
     #endregion
 
     #region Methods
@@ -28,7 +30,15 @@ public class MachineTask
         var newSegment = segment.SplitIntoTwoSeg(remainQuantity, curPlanEndTime, nextPlanStartTime);
 
         var postponeSeconds = (long) (newSegment.PlanEndTime - beforeEndTime).TotalSeconds;
-
+        for (int i = 0; i < _segments.Count; i++)
+        {
+            if (i > segment.Index)
+            {
+                _segments[i].ReAssign(postponeSeconds);
+            }
+        }
+        _segments.Add(newSegment);
+        _segments.Sort((seg1, seg2) => seg1.Index - seg2.Index);
 
     }
 
@@ -61,12 +71,12 @@ public class TaskSegment
 
     private Status _status = Status.INIT;
     
+    public int StatusCode => (int)_status;
+    
     #endregion
 
     #region Methods
-
-    public int StatusCode => (int)_status;
-
+    
     public DateTime PlanEndTime => _planEndTime;
 
     public TaskSegment SplitIntoTwoSeg(int remainQuantity, DateTime curPlanEndTime, DateTime nextPlanStartTime)
@@ -99,7 +109,7 @@ public class TaskSegment
 
     private TaskSegment CreateNewSegment(int remainQuantity, DateTime nextPlanStartTime)
     {
-        
+        return new TaskSegment();
     }
 
     #endregion
