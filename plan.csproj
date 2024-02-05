@@ -7,8 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Backend\Application\" />
+      <Folder Include="Backend\Application\Support\" />
       <Folder Include="Backend\Execute\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MudBlazor" Version="6.15.0" />
     </ItemGroup>
 
 </Project>

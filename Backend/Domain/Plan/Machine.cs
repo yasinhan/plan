@@ -18,7 +18,7 @@ public class Machine
 
     #region Methods
 
-    public void AttachUnfinishedTask(List<MachineTask>? tasks)
+    public void AttachTasks(List<MachineTask>? tasks)
     {
         if (null == tasks)
         {
