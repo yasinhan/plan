@@ -1,4 +1,6 @@
-﻿namespace plan.Backend.Plan.Interface.model;
+﻿using System.Collections.Generic;
+
+namespace plan.Backend.Plan.Interface.model;
 
 public record MachineDto(long MachineId, string MachineCode, int BoreDiameter, List<TaskSegmentDto> Tasks);
 

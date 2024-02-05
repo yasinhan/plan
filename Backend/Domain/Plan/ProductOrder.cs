@@ -1,4 +1,6 @@
-﻿namespace plan.Backend.plan;
+﻿using System.Collections.Generic;
+
+namespace plan.Backend.plan;
 
 public class ProductOrder
 {

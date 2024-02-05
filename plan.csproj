@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Backend\Application\Plan\Model\Query\" />
       <Folder Include="Backend\Application\Support\" />
       <Folder Include="Backend\Execute\" />
+      <Folder Include="Backend\Repository\Plan\" />
     </ItemGroup>
 
     <ItemGroup>
